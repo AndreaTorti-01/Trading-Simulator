@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trading Game</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  </head>
+
+  <body>
+    <h1>Trading Game</h1>
+    <h2>Symbol: {{ symbol }}</h2>
+    <h2>Start Date: {{ start_date }}</h2>
+
+    <div style="display: flex; flex-direction: row; align-items: center">
+      <div id="chart_div" style="width: 100%; height: 45em"></div>
+      <form action="/action" method="post" style="display: flex; flex-direction: column; justify-content: center;">
+        <label for="buy">Buy:</label>
+        <input type="number" id="buy" name="buy" required />
+        <label for="stop-loss">Stop Loss:</label>
+        <input type="number" id="stop-loss" name="stop-loss" required />
+        <label for="take-profit">Take Profit:</label>
+        <input type="number" id="take-profit" name="take-profit" required />
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+
+    <script type="text/javascript">
+      google.charts.load('current', { packages: ['corechart'] })
+      google.charts.setOnLoadCallback(drawChart)
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'Low', 'Open', 'Close', 'High'],
+          {% for index, row in data.iterrows() %}
+          ['{{ index }}', {{ row['Low'] }}, {{ row['Open'] }}, {{ row['Adj Close'] }}, {{ row['High'] }}]{% if not loop.last %}, {% endif %}
+          {% endfor %}
+        ]);
+
+        var options = {
+          legend: 'none',
+          animation: {
+            startup: true,
+            duration: 1000,
+            easing: 'inAndOut'
+          },
+          hAxis: {
+            format: 'MMM dd, yyyy'
+          },
+          candlestick: {
+            fallingColor: {
+              strokeWidth: 0,
+              fill: '#a52714'
+            }, // red
+            risingColor: {
+              strokeWidth: 0,
+              fill: '#0f9d58'
+            }   // green
+          }
+        };
+
+        var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+  </body>
+</html>
