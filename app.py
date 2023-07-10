@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request
 import os
 import pandas as pd
 import yfinance as yf
@@ -23,7 +23,8 @@ def favicon():
     
 @app.route("/action", methods=['POST'])
 def action():
-    return "action"
+    # return the input data as debugging
+    return str(request.form)
 
 def get_random_stock_symbol():
     with open('s&p.txt', 'r') as file:
@@ -55,3 +56,6 @@ def download_stock_data():
     print (data.head())
     
     return data, start_datetime, random_symbol
+
+if __name__ == "__main__":
+    app.run()

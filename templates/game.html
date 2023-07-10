@@ -8,7 +8,7 @@
   <body>
     <h1>Trading Game</h1>
     <h2>Symbol: {{ symbol }}</h2>
-    <h2>Start Date: {{ start_date }}</h2>
+    <h2>Start Date and Time: {{ start_date.strftime('%Y-%m-%d %H:%M:%S') }}</h2>
 
     <div style="display: flex; flex-direction: row; align-items: center">
       <div id="chart_div" style="width: 100%; height: 45em"></div>
@@ -37,11 +37,6 @@
 
         var options = {
           legend: 'none',
-          animation: {
-            startup: true,
-            duration: 1000,
-            easing: 'inAndOut'
-          },
           hAxis: {
             format: 'MMM dd, yyyy'
           },
