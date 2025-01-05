@@ -1,67 +1,69 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Trading Game</title>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  </head>
 
-  <body>
-    <h1>Trading Game</h1>
-    {% if not gainz %}
-    <h2>Symbol: {{ symbol }}</h2>
-    {% else %}
-    <h2>Gainz (Starting with 1000): {{ gainz }}</h2>
-    {% endif %}
-    <h2>Start Date and Time: {{ start_date.strftime('%Y-%m-%d %H:%M:%S') }}</h2>
+<head>
+  <title>Trading Game</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
 
-    {% if not gainz %}
-    <div style="display: flex; flex-direction: row; align-items: center">
-      <div id="chart_div" style="width: 100%; height: 45em"></div>
-      <form action="/action" method="post" style="display: flex; flex-direction: column; justify-content: center;">
-        <label for="buy">Buy:</label>
-        <input type="number" step="0.01" id="buy" name="buy" required />
-        <label for="stop-loss">Stop Loss:</label>
-        <input type="number" step="0.01" id="stop-loss" name="stop-loss" required />
-        <label for="take-profit">Take Profit:</label>
-        <input type="number" step="0.01" id="take-profit" name="take-profit" required />
-        <input type="submit" value="Submit" />
-      </form>
-    </div>
-    {% endif %}
-    
-    <script type="text/javascript">
-      google.charts.load('current', { packages: ['corechart'] })
-      google.charts.setOnLoadCallback(drawChart)
+<body>
+  <h1>Trading Game</h1>
+  {% if not gainz %}
+  <h2>Symbol: {{ symbol }}</h2>
+  {% else %}
+  <h2>Gainz (Starting with 1000): {{ gainz }}</h2>
+  {% endif %}
+  <h2>Start Date and Time: {{ start_date.strftime('%Y-%m-%d %H:%M:%S') }}</h2>
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Date', 'Low', 'Open', 'Close', 'High'],
-          {% for index, row in data.iterrows() %}
-          ['{{ index }}', {{ row['Low'] }}, {{ row['Open'] }}, {{ row['Adj Close'] }}, {{ row['High'] }}]{% if not loop.last %}, {% endif %}
-          {% endfor %}
-        ]);
+  {% if not gainz %}
+  <div style="display: flex; flex-direction: row; align-items: center">
+    <div id="chart_div" style="width: 100%; height: 45em"></div>
+    <form action="/action" method="post" style="display: flex; flex-direction: column; justify-content: center;">
+      <label for="buy">Buy:</label>
+      <input type="number" step="0.01" id="buy" name="buy" required />
+      <label for="stop-loss">Stop Loss:</label>
+      <input type="number" step="0.01" id="stop-loss" name="stop-loss" required />
+      <label for="take-profit">Take Profit:</label>
+      <input type="number" step="0.01" id="take-profit" name="take-profit" required />
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+  {% endif %}
 
-        var options = {
-          legend: 'none',
-          hAxis: {
-            format: 'MMM dd, yyyy'
-          },
-          candlestick: {
-            fallingColor: {
-              strokeWidth: 0,
-              fill: '#a52714'
-            }, // red
-            risingColor: {
-              strokeWidth: 0,
-              fill: '#0f9d58'
-            }   // green
-          }
-        };
+  <script type="text/javascript">
+    google.charts.load('current', { packages: ['corechart'] })
+    google.charts.setOnLoadCallback(drawChart)
 
-        var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Date', 'Low', 'Open', 'Close', 'High'],
+        {% for index, row in data.iterrows() %}
+        ['{{ index }}', {{ row['Low']|float }}, {{ row['Open']|float }}, {{ row['Close']|float }}, {{ row['High']|float }}],
+        {% endfor %}
+      ]);
 
-        chart.draw(data, options);
+    var options = {
+      legend: 'none',
+      hAxis: {
+        format: 'MMM dd, yyyy'
+      },
+      candlestick: {
+        fallingColor: {
+          strokeWidth: 0,
+          fill: '#a52714'
+        }, // red
+        risingColor: {
+          strokeWidth: 0,
+          fill: '#0f9d58'
+        }   // green
       }
-    </script>
-  </body>
+    };
+
+    var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
+
+    chart.draw(data, options);
+      }
+  </script>
+</body>
+
 </html>

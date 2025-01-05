@@ -37,7 +37,10 @@ def action():
     buy_price = -1
     # check if the buy price is in any low-high range
     for index, row in selected_data.iterrows(): 
-        if row['Low'] <= buy <= row['High']:
+        low_val = float(row['Low'])
+        high_val = float(row['High'])
+        print(low_val, buy, high_val)
+        if low_val <= buy <= high_val:
             buy_price = buy
             buy_time = index
             break
@@ -46,10 +49,12 @@ def action():
         sell_price = -1
         # check if the stoploss or takeprofit price is in any low-high range after the buy price
         for index, row in selected_data[buy_time:].iterrows():
-            if row['Low'] <= stoploss <= row['High']:
+            low_val = float(row['Low'])
+            high_val = float(row['High'])
+            if low_val <= stoploss <= high_val:
                 sell_price = stoploss
                 break
-            if row['Low'] <= takeprofit <= row['High']:
+            if low_val <= takeprofit <= high_val:
                 sell_price = takeprofit
                 break
         
