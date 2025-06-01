@@ -1,6 +1,9 @@
 # Trading-Simulator
 python minigame to simulate intraday trading
 
+![Alt text](docs/game.png)
+![Alt text](docs/end.png)
+
 ## Usage
 python -m venv env
 source env/bin/activate if on linux
